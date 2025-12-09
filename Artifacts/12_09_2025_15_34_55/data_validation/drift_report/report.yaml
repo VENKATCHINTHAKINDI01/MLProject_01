@@ -1,0 +1,93 @@
+Abnormal_URL:
+  drift_status: false
+  p_value: 0.8393562351530406
+DNSRecord:
+  drift_status: false
+  p_value: 0.9567950838314809
+Domain_registeration_length:
+  drift_status: false
+  p_value: 0.9999983994854099
+Favicon:
+  drift_status: false
+  p_value: 1.0
+Google_Index:
+  drift_status: false
+  p_value: 0.999991733805822
+HTTPS_token:
+  drift_status: false
+  p_value: 0.7131044860207258
+Iframe:
+  drift_status: false
+  p_value: 0.9999999999992943
+Links_in_tags:
+  drift_status: false
+  p_value: 1.0
+Links_pointing_to_page:
+  drift_status: false
+  p_value: 0.999999965908459
+Page_Rank:
+  drift_status: false
+  p_value: 0.8148665993701488
+Prefix_Suffix:
+  drift_status: false
+  p_value: 1.0
+Redirect:
+  drift_status: false
+  p_value: 0.6509863853107243
+Request_URL:
+  drift_status: false
+  p_value: 0.72425954076736
+Result:
+  drift_status: false
+  p_value: 1.0
+RightClick:
+  drift_status: false
+  p_value: 1.0
+SFH:
+  drift_status: false
+  p_value: 1.0
+SSLfinal_State:
+  drift_status: false
+  p_value: 0.9994193854231466
+Shortining_Service:
+  drift_status: false
+  p_value: 0.566561202784556
+Statistical_report:
+  drift_status: false
+  p_value: 0.9995865036983179
+Submitting_to_email:
+  drift_status: false
+  p_value: 1.0
+URL_Length:
+  drift_status: false
+  p_value: 1.0
+URL_of_Anchor:
+  drift_status: false
+  p_value: 0.9994193854231466
+age_of_domain:
+  drift_status: false
+  p_value: 0.21531395666213293
+double_slash_redirecting:
+  drift_status: false
+  p_value: 0.9518099343765413
+having_At_Symbol:
+  drift_status: false
+  p_value: 0.8756389105267057
+having_IP_Address:
+  drift_status: false
+  p_value: 0.9999999999397761
+having_Sub_Domain:
+  drift_status: false
+  p_value: 0.05282268086830111
+on_mouseover:
+  drift_status: false
+  p_value: 0.9998388206083407
+popUpWidnow:
+  drift_status: false
+  p_value: 0.9999578103694244
+port:
+  drift_status: false
+  p_value: 0.9945670562766389
+web_traffic:
+  drift_status: false
+  p_value: 0.819863123426271
