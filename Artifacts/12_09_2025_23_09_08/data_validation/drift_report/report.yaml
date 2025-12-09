@@ -1,0 +1,109 @@
+Abnormal_URL:
+  drift_detected: &id001 !!python/object/apply:numpy._core.multiarray.scalar
+  - !!python/object/apply:numpy.dtype
+    args:
+    - b1
+    - false
+    - true
+    state: !!python/tuple
+    - 3
+    - '|'
+    - null
+    - null
+    - null
+    - -1
+    - -1
+    - 0
+  - !!binary |
+    AA==
+  p_value: 0.9994193854231466
+DNSRecord:
+  drift_detected: *id001
+  p_value: 0.7572410755183554
+Domain_registeration_length:
+  drift_detected: *id001
+  p_value: 1.0
+Favicon:
+  drift_detected: *id001
+  p_value: 0.999200108876927
+Google_Index:
+  drift_detected: *id001
+  p_value: 1.0
+HTTPS_token:
+  drift_detected: *id001
+  p_value: 0.9997115090643619
+Iframe:
+  drift_detected: *id001
+  p_value: 0.9999888959498077
+Links_in_tags:
+  drift_detected: *id001
+  p_value: 0.9252648943119504
+Links_pointing_to_page:
+  drift_detected: *id001
+  p_value: 0.4106383908660457
+Page_Rank:
+  drift_detected: *id001
+  p_value: 0.9039295322201264
+Prefix_Suffix:
+  drift_detected: *id001
+  p_value: 0.9999968024420123
+Redirect:
+  drift_detected: *id001
+  p_value: 0.9874069762258927
+Request_URL:
+  drift_detected: *id001
+  p_value: 1.0
+Result:
+  drift_detected: *id001
+  p_value: 0.9968835466898603
+RightClick:
+  drift_detected: *id001
+  p_value: 1.0
+SFH:
+  drift_detected: *id001
+  p_value: 0.9939782507422378
+SSLfinal_State:
+  drift_detected: *id001
+  p_value: 0.9999999999952338
+Shortining_Service:
+  drift_detected: *id001
+  p_value: 1.0
+Statistical_report:
+  drift_detected: *id001
+  p_value: 1.0
+Submitting_to_email:
+  drift_detected: *id001
+  p_value: 0.9999999999999999
+URL_Length:
+  drift_detected: *id001
+  p_value: 0.9999994872658009
+URL_of_Anchor:
+  drift_detected: *id001
+  p_value: 0.8487839446728682
+age_of_domain:
+  drift_detected: *id001
+  p_value: 1.0
+double_slash_redirecting:
+  drift_detected: *id001
+  p_value: 1.0
+having_At_Symbol:
+  drift_detected: *id001
+  p_value: 0.47526942346189605
+having_IP_Address:
+  drift_detected: *id001
+  p_value: 1.0
+having_Sub_Domain:
+  drift_detected: *id001
+  p_value: 0.9491923880973543
+on_mouseover:
+  drift_detected: *id001
+  p_value: 1.0
+popUpWidnow:
+  drift_detected: *id001
+  p_value: 0.9999955619617864
+port:
+  drift_detected: *id001
+  p_value: 1.0
+web_traffic:
+  drift_detected: *id001
+  p_value: 0.9939782507422371
