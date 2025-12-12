@@ -25,83 +25,123 @@ class DataIngestion:
         except Exception as e:
             raise Customexception(e, sys)
 
-    def export_collection_as_dataframe(self):
+    # -------------------------------------------------------------------------------------
+    # READ DATA FROM MONGODB
+    # -------------------------------------------------------------------------------------
+    def export_collection_as_dataframe(self) -> pd.DataFrame:
         """
-        Read data from MongoDB and return as DataFrame
+        Connects to MongoDB, reads the collection, returns a DataFrame.
+        Includes SSL handshake fixes for macOS & Python.
         """
         try:
             database_name = self.data_ingestion_config.database_name
             collection_name = self.data_ingestion_config.collection_name
 
-            self.mongo_client = pymongo.MongoClient(MONGO_DB_URL, tls=True)
+            logging.info(f"Connecting to MongoDB cluster...")
+            logging.info(f"DB: {database_name}, Collection: {collection_name}")
+
+            # FIX FOR SSL HANDSHAKE ERROR
+            self.mongo_client = pymongo.MongoClient(
+                MONGO_DB_URL,
+                tls=True,
+                tlsAllowInvalidCertificates=True,
+                serverSelectionTimeoutMS=30000,
+                connectTimeoutMS=30000,
+            )
+
             collection = self.mongo_client[database_name][collection_name]
 
-            df = pd.DataFrame(list(collection.find()))
+            dataframe = pd.DataFrame(list(collection.find()))
 
-            if "_id" in df.columns.to_list():
-                df = df.drop(columns=["_id"], axis=1)
+            if dataframe.empty:
+                raise Customexception(
+                    f"MongoDB collection '{collection_name}' is EMPTY. No data to ingest.",
+                    sys,
+                )
 
-            df.replace({"na": np.nan}, inplace=True)
-            return df
+            # Drop default MongoDB ID column
+            if "_id" in dataframe.columns:
+                dataframe.drop(columns=["_id"], inplace=True)
 
-        except Exception as e:
-            raise Customexception(e, sys)
+            # Replace string "na" with actual NaN
+            dataframe.replace({"na": np.nan}, inplace=True)
 
-    def export_data_into_feature_store(self, dataframe: pd.DataFrame):
-        """
-        Save DataFrame to CSV in feature store path
-        """
-        try:
-            feature_store_file_path = self.data_ingestion_config.feature_store_file_path
-            dir_path = os.path.dirname(feature_store_file_path)
-            os.makedirs(dir_path, exist_ok=True)
+            logging.info(f"DataFrame loaded successfully with shape: {dataframe.shape}")
 
-            dataframe.to_csv(feature_store_file_path, index=False, header=True)
             return dataframe
 
         except Exception as e:
             raise Customexception(e, sys)
 
-    def split_data_as_train_test(self, dataframe: pd.DataFrame):
-        """
-        Split dataframe into training and testing datasets and save as CSVs
-        """
+    # -------------------------------------------------------------------------------------
+    # SAVE RAW DATA TO FEATURE STORE
+    # -------------------------------------------------------------------------------------
+    def export_data_into_feature_store(self, dataframe: pd.DataFrame):
         try:
-            train_set, test_set = train_test_split(
-                dataframe, test_size=self.data_ingestion_config.train_test_split_ratio
-            )
+            feature_store_path = self.data_ingestion_config.feature_store_file_path
+            dir_path = os.path.dirname(feature_store_path)
 
-            logging.info("Performed train-test split on the dataframe")
-
-            dir_path = os.path.dirname(self.data_ingestion_config.training_file_path)
             os.makedirs(dir_path, exist_ok=True)
 
-            train_set.to_csv(
-                self.data_ingestion_config.training_file_path, index=False, header=True
-            )
-            test_set.to_csv(
-                self.data_ingestion_config.testing_file_path, index=False, header=True
-            )
+            dataframe.to_csv(feature_store_path, index=False)
+            logging.info(f"Raw data saved to feature store: {feature_store_path}")
 
-            logging.info("Exported train and test files to path")
+            return dataframe
 
         except Exception as e:
             raise Customexception(e, sys)
 
-    def initiate_data_ingestion(self):
-        """
-        Full pipeline: fetch → store → split → return artifact
-        """
+    # -------------------------------------------------------------------------------------
+    # SPLIT TRAIN & TEST DATA
+    # -------------------------------------------------------------------------------------
+    def split_data_as_train_test(self, dataframe: pd.DataFrame):
         try:
+            logging.info("Performing train-test split...")
+
+            test_ratio = self.data_ingestion_config.train_test_split_ratio
+
+            if len(dataframe) < 2:
+                raise Customexception("Dataset too small to split.", sys)
+
+            train_df, test_df = train_test_split(
+                dataframe,
+                test_size=test_ratio,
+                shuffle=True,
+                random_state=42
+            )
+
+            train_path = self.data_ingestion_config.training_file_path
+            test_path = self.data_ingestion_config.testing_file_path
+
+            os.makedirs(os.path.dirname(train_path), exist_ok=True)
+
+            train_df.to_csv(train_path, index=False)
+            test_df.to_csv(test_path, index=False)
+
+            logging.info(f"Train/Test split completed.")
+            logging.info(f"Train shape: {train_df.shape}, Test shape: {test_df.shape}")
+
+        except Exception as e:
+            raise Customexception(e, sys)
+
+    # -------------------------------------------------------------------------------------
+    # ORCHESTRATE FULL INGESTION PIPELINE
+    # -------------------------------------------------------------------------------------
+    def initiate_data_ingestion(self) -> DataIngestionArtifact:
+        try:
+            logging.info("========== STARTING DATA INGESTION ==========")
+
             dataframe = self.export_collection_as_dataframe()
             dataframe = self.export_data_into_feature_store(dataframe)
             self.split_data_as_train_test(dataframe)
 
-            data_ingestion_artifact = DataIngestionArtifact(
+            artifact = DataIngestionArtifact(
                 trained_file_path=self.data_ingestion_config.training_file_path,
-                test_file_path=self.data_ingestion_config.testing_file_path
+                test_file_path=self.data_ingestion_config.testing_file_path,
             )
-            return data_ingestion_artifact
+
+            logging.info("========== DATA INGESTION COMPLETED SUCCESSFULLY ==========")
+            return artifact
 
         except Exception as e:
             raise Customexception(e, sys)
